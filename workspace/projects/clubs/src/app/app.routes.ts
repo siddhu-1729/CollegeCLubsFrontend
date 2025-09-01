@@ -8,6 +8,7 @@ import { IEI } from './iei/iei';
 import { ISTE } from './iste/iste';
 import { LOLO } from './lolo/lolo';
 import { PAIECELL } from './paiecell/paiecell';
+import { ACE } from './ace/ace';
 
 
 export const routes: Routes = [
@@ -19,7 +20,8 @@ export const routes: Routes = [
     {path:'iete',component:IETE},
     {path:'iste',component:ISTE},
     {path:'lolo',component:LOLO},
-    {path:'paiecell',component:PAIECELL}
+    {path:'paiecell',component:PAIECELL},
+    {path:'ace',component:ACE}
 
     
 ];
