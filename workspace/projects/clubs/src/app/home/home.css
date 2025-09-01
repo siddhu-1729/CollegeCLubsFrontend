@@ -28,19 +28,19 @@
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    animation: fadein 4s ease-in forwards infinite;
+    animation: fadein 4s ease-in forwards;
    
 }
 
 @keyframes fadein {
     0% {
         opacity: 0;
-        transform: translateZ(-100px);
+        transform: translate(-100px);
         /* transform: translate(1000%); */
     }
     100% {
         opacity: 1;
-        transform:translateZ(0);
+        transform:translate(0);
         /* transform: translate(0%); */
     }
 }
