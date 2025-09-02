@@ -15,7 +15,10 @@ export class Home implements AfterViewInit {
    ngAfterViewInit(): void {
      
    }
+   screenWidth:number=window.innerWidth;
+   videoWidth: number =300;
+    videoHeight: number =250;
    
+
+    
 }
-
-
