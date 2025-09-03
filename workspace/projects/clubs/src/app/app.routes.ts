@@ -9,6 +9,7 @@ import { ISTE } from './iste/iste';
 import { LOLO } from './lolo/lolo';
 import { PAIECELL } from './paiecell/paiecell';
 import { ACE } from './ace/ace';
+import { AME } from './ame/ame';
 
 
 export const routes: Routes = [
@@ -21,7 +22,8 @@ export const routes: Routes = [
     {path:'iste',component:ISTE},
     {path:'lolo',component:LOLO},
     {path:'paiecell',component:PAIECELL},
-    {path:'ace',component:ACE}
+    {path:'ace',component:ACE},
+    {path:'ame',component:AME}
 
     
 ];
