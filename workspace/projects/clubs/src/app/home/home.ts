@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { YouTubePlayer, YouTubePlayerModule } from '@angular/youtube-player';
+import { MatDialogModule ,MatDialog} from '@angular/material/dialog';
+import { Login } from '../login/login';
 
 
 @Component({
   selector: 'app-home',
-  imports: [RouterModule,CommonModule,YouTubePlayerModule,YouTubePlayer],
+  imports: [RouterModule,CommonModule,YouTubePlayerModule,YouTubePlayer,MatDialogModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -32,6 +34,13 @@ export class Home implements OnInit {
       this.videoHeight = 315; // maintains 16:9 aspect ratio
     }
   }
-
+  
+  constructor(private dialog:MatDialog){}
+  openLoginDialog(){
+    this.dialog.open(Login,{
+      width:'400px'
+    });
+    
+  }
     
 }

@@ -10,6 +10,7 @@ import { LOLO } from './lolo/lolo';
 import { PAIECELL } from './paiecell/paiecell';
 import { ACE } from './ace/ace';
 import { AME } from './ame/ame';
+import { Login } from './login/login';
 
 
 export const routes: Routes = [
@@ -23,7 +24,8 @@ export const routes: Routes = [
     {path:'lolo',component:LOLO},
     {path:'paiecell',component:PAIECELL},
     {path:'ace',component:ACE},
-    {path:'ame',component:AME}
+    {path:'ame',component:AME},
+    {path:'login',component:Login}
 
     
 ];
