@@ -1,0 +1,29 @@
+@if (club(); as currentClub) {
+  <div class="login-shell">
+    <div class="login-card" [style.border-color]="currentClub.color">
+      <a [routerLink]="['/club', currentClub.id]" class="back">Back to Club</a>
+      <h1>{{ currentClub.name }} Login</h1>
+      <p class="helper">Use your club admin credentials to add or update events.</p>
+
+      <form (ngSubmit)="submit()" class="form">
+        <label>
+          Username
+          <input type="text" [(ngModel)]="username" name="username" required />
+        </label>
+
+        <label>
+          Password
+          <input type="password" [(ngModel)]="password" name="password" required />
+        </label>
+
+        @if (error) {
+          <p class="error">{{ error }}</p>
+        }
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p class="demo"><strong>Demo:</strong> {{ currentClub.credentials.username }} / {{ currentClub.credentials.password }}</p>
+    </div>
+  </div>
+}

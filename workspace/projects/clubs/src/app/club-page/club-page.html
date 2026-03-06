@@ -1,0 +1,115 @@
+@if (club(); as currentClub) {
+  <div class="club-shell">
+    <header class="club-header" [style.border-color]="currentClub.color">
+      <a routerLink="/" class="back">Back to Clubs</a>
+      <div class="title-wrap">
+        <h1>{{ currentClub.name }}</h1>
+        <p>{{ currentClub.tagline }}</p>
+      </div>
+      <div class="header-actions">
+        @if (isLoggedIn()) {
+          <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
+        } @else {
+          <a [routerLink]="['/club', currentClub.id, 'login']" class="btn btn-primary">Club Login</a>
+        }
+      </div>
+    </header>
+
+    <section class="about" [style.border-color]="currentClub.color">
+      <h2>About</h2>
+      <p>{{ currentClub.description }}</p>
+      <div class="contacts">
+        <span><strong>Email:</strong> {{ currentClub.contacts.email }}</span>
+        <span><strong>Phone:</strong> {{ currentClub.contacts.phone }}</span>
+      </div>
+    </section>
+
+    <section class="events" [style.border-color]="currentClub.color">
+      <div class="section-head">
+        <h2>Events</h2>
+        <p>Upcoming and managed events for {{ currentClub.name }}.</p>
+      </div>
+
+      <div class="event-list">
+        @for (event of events(); track trackByEvent($index, event)) {
+          <article class="event-card">
+            <h3>{{ event.title }}</h3>
+            <p><strong>Date:</strong> {{ event.date }}</p>
+            <p><strong>Venue:</strong> {{ event.venue }}</p>
+            <p>{{ event.description }}</p>
+            @if (isLoggedIn()) {
+              <button type="button" class="btn btn-secondary" (click)="editEvent(event)">Update Event</button>
+            }
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="manager" [style.border-color]="currentClub.color">
+      <h2>Event Manager</h2>
+      @if (!isLoggedIn()) {
+        <p class="hint">Club admin login is required to add or update events.</p>
+      } @else {
+        <form class="event-form" (ngSubmit)="submitForm()">
+          <label>
+            Title
+            <input
+              type="text"
+              [ngModel]="form().title"
+              (ngModelChange)="setFormField('title', $event)"
+              name="title"
+              required
+            />
+          </label>
+
+          <label>
+            Date
+            <input
+              type="date"
+              [ngModel]="form().date"
+              (ngModelChange)="setFormField('date', $event)"
+              name="date"
+              required
+            />
+          </label>
+
+          <label>
+            Venue
+            <input
+              type="text"
+              [ngModel]="form().venue"
+              (ngModelChange)="setFormField('venue', $event)"
+              name="venue"
+              required
+            />
+          </label>
+
+          <label>
+            Description
+            <textarea
+              [ngModel]="form().description"
+              (ngModelChange)="setFormField('description', $event)"
+              name="description"
+              rows="3"
+              required
+            ></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              {{ editingEventId() ? 'Save Update' : 'Add Event' }}
+            </button>
+            @if (editingEventId()) {
+              <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+            }
+          </div>
+        </form>
+      }
+    </section>
+  </div>
+} @else {
+  <div class="not-found">
+    <h2>Club not found</h2>
+    <a routerLink="/">Go back</a>
+  </div>
+}
