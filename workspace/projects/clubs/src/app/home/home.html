@@ -1,28 +1,105 @@
-<div class="home-shell">
-  <header class="hero">
-    <p class="badge">SRKR Engineering College</p>
-    <h1>Student Clubs Portal</h1>
-    <p class="subtitle">
-      Explore all clubs, check upcoming events, and use club-specific login to add or update event details.
-    </p>
-  </header>
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_right,_#1f2937,_#020617_52%)] px-4 py-8 text-slate-200">
+  <section
+    class="mx-auto flex max-w-7xl flex-col justify-center md:min-h-[calc(100vh-5rem)]"
+    aria-label="Home page introduction">
+    <header class="mx-auto mb-8 w-full max-w-7xl">
+      <p class="mb-4 inline-block rounded-full bg-blue-700 px-3 py-1.5 text-sm font-semibold">SRKR Engineering College</p>
+      <h1 class="m-0 text-[clamp(1.8rem,5vw,3rem)] leading-[1.1] font-bold">Student Clubs Portal</h1>
+      <p class="mt-3 max-w-3xl text-slate-300">
+        Discover student organizations that encourage learning, collaboration, leadership, and continuous growth across campus.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:brightness-110"
+          href="#clubs-section"
+          (click)="revealClubs()">
+          Explore Clubs
+        </a>
+      </div>
+    </header>
 
-  <section class="clubs-grid" aria-label="Clubs list">
-    @for (club of clubs; track trackByClub($index, club)) {
-      <article class="club-card" [style.border-color]="club.color">
-        <div class="club-head">
-          <span class="club-chip" [style.background]="club.color">{{ club.shortName }}</span>
-          <h2>{{ club.name }}</h2>
+    <section class="mx-auto grid max-w-7xl gap-5 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]" aria-label="About clubs organization">
+      <div class="rounded-[18px] border border-slate-400/20 bg-slate-900/70 p-6 shadow-[0_10px_22px_rgba(2,6,23,0.35)]">
+        <p class="mb-2 text-[0.78rem] font-bold uppercase tracking-[0.14em] text-sky-300">About The Organization</p>
+        <h2 class="m-0 text-[clamp(1.45rem,4vw,2.4rem)] leading-[1.15] font-semibold">Rooted in purpose, built for technical growth</h2>
+        <p class="about-write-on mt-4 leading-7 text-slate-300">
+          Sagi Rama Krishnam Raju Engineering College was established in 1980 and is recognized by the college itself as one of the earliest self-financing engineering colleges in Andhra Pradesh. The institution was founded with a clear goal: empowering rural students through technical education in a strong academic environment.
+        </p>
+        <p class="about-write-on-delayed mt-4 leading-7 text-slate-300">
+          The SRKR campus spans 30 acres in Bhimavaram and presents itself as an autonomous institution with state-of-the-art facilities for science and technology, a research-oriented culture, and an inclusive teaching-learning environment. This clubs portal extends that same ecosystem by connecting students with communities for innovation, leadership, creativity, and peer learning.
+        </p>
+      </div>
+
+      <div class="grid gap-4">
+        <article class="rounded-[18px] border border-slate-400/20 bg-slate-900/70 p-5 shadow-[0_10px_22px_rgba(2,6,23,0.35)]">
+          <span class="mb-3 inline-block text-[1.05rem] font-bold text-blue-300">12+</span>
+          <h3 class="mb-2 text-[1.05rem] font-semibold">Active Clubs</h3>
+          <p class="leading-6 text-slate-300">Explore communities across coding, engineering, placements, creativity, and campus culture.</p>
+        </article>
+        <article class="rounded-[18px] border border-slate-400/20 bg-slate-900/70 p-5 shadow-[0_10px_22px_rgba(2,6,23,0.35)]">
+          <span class="mb-3 inline-block text-[1.05rem] font-bold text-blue-300">Learning</span>
+          <h3 class="mb-2 text-[1.05rem] font-semibold">Skill Development</h3>
+          <p class="leading-6 text-slate-300">Join workshops, project teams, and events that help you learn beyond the classroom.</p>
+        </article>
+        <article class="rounded-[18px] border border-slate-400/20 bg-slate-900/70 p-5 shadow-[0_10px_22px_rgba(2,6,23,0.35)]">
+          <span class="mb-3 inline-block text-[1.05rem] font-bold text-blue-300">Growth</span>
+          <h3 class="mb-2 text-[1.05rem] font-semibold">Student Progress</h3>
+          <p class="leading-6 text-slate-300">Build leadership, teamwork, confidence, and practical experience through regular club participation.</p>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <section class="mx-auto max-w-7xl pt-4" #clubsSection>
+    <div
+      id="clubs-section"
+      class="mb-5 scroll-mt-8 transition duration-700 ease-out"
+      [class.opacity-0]="!clubsVisible"
+      [class.translate-y-8]="!clubsVisible"
+      [class.opacity-100]="clubsVisible"
+      [class.translate-y-0]="clubsVisible">
+      <p class="mb-2 text-[0.78rem] font-bold uppercase tracking-[0.14em] text-sky-300">Explore Clubs</p>
+      <h2 class="m-0 text-[clamp(1.45rem,4vw,2.4rem)] leading-[1.15] font-semibold">Visit clubs and find your community</h2>
+      <p class="mt-2 leading-6 text-slate-300">
+        Open any club to see its details, events, and achievements, or continue to club login for updates.
+      </p>
+    </div>
+
+    <section class="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4" aria-label="Clubs list">
+    @for (club of clubs; track trackByClub($index, club); let i = $index) {
+      <article
+        class="rounded-[14px] border bg-slate-900/75 p-4 shadow-[0_10px_22px_rgba(2,6,23,0.35)] transition duration-500 ease-out"
+        [style.border-color]="club.color"
+        [style.transition-delay]="(i * 120) + 'ms'"
+        [class.opacity-0]="!clubsVisible"
+        [class.translate-y-8]="!clubsVisible"
+        [class.scale-[0.98]]="!clubsVisible"
+        [class.pointer-events-none]="!clubsVisible"
+        [class.opacity-100]="clubsVisible"
+        [class.translate-y-0]="clubsVisible"
+        [class.scale-100]="clubsVisible">
+        <div class="flex items-center gap-3">
+          <span class="rounded-full px-2.5 py-1 text-[0.8rem] font-bold text-slate-950" [style.background]="club.color">{{ club.shortName }}</span>
+          <h2 class="m-0 text-[1.15rem] font-semibold">{{ club.name }}</h2>
         </div>
 
-        <p class="tagline">{{ club.tagline }}</p>
-        <p class="desc">{{ club.description }}</p>
+        <p class="mt-2.5 font-semibold text-blue-300">{{ club.tagline }}</p>
+        <p class="min-h-[2.8rem] text-[0.95rem] text-slate-300">{{ club.description }}</p>
 
-        <div class="actions">
-          <a [routerLink]="['/club', club.id]" class="btn btn-primary">Open Club</a>
-          <a [routerLink]="['/club', club.id, 'login']" class="btn btn-secondary">Club Login</a>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a
+            [routerLink]="['/club', club.id]"
+            class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:brightness-110">
+            Open Club
+          </a>
+          <a
+            [routerLink]="['/club', club.id, 'login']"
+            class="rounded-lg border border-slate-500 bg-transparent px-3 py-2 text-sm font-semibold text-slate-200 transition hover:-translate-y-0.5 hover:border-slate-300">
+            Club Login
+          </a>
         </div>
       </article>
     }
+    </section>
   </section>
 </div>

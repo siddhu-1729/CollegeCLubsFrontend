@@ -1,115 +1,337 @@
 @if (club(); as currentClub) {
-  <div class="club-shell">
-    <header class="club-header" [style.border-color]="currentClub.color">
-      <a routerLink="/" class="back">Back to Clubs</a>
-      <div class="title-wrap">
-        <h1>{{ currentClub.name }}</h1>
-        <p>{{ currentClub.tagline }}</p>
+  <div
+    class="relative min-h-screen overflow-hidden bg-[linear-gradient(135deg,_#081120,_#0f172a_42%,_#172554_100%)] px-5 py-5 text-slate-200"
+    [style.--club-accent]="currentClub.color">
+    <div
+      class="pointer-events-none fixed top-[8%] right-[-10rem] z-0 h-[28rem] w-[28rem] rounded-full opacity-[0.18] blur-[18px] [background:radial-gradient(circle,_color-mix(in_srgb,var(--club-accent)_68%,transparent),_transparent_68%)] [animation:float-orb_16s_ease-in-out_infinite]">
+    </div>
+    <div
+      class="pointer-events-none fixed bottom-[5%] left-[-9rem] z-0 h-[28rem] w-[28rem] rounded-full opacity-[0.18] blur-[18px] [background:radial-gradient(circle,_color-mix(in_srgb,var(--club-accent)_34%,#38bdf8_66%),_transparent_72%)] [animation:float-orb_20s_ease-in-out_infinite_reverse]">
+    </div>
+
+    <header
+      class="relative z-10 mx-auto mb-4 grid max-w-7xl gap-2 overflow-hidden rounded-[18px] border bg-slate-900/80 p-[1.15rem] shadow-[0_18px_40px_rgba(2,6,23,0.32)] backdrop-blur-[12px]"
+      [style.border-color]="currentClub.color">
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,var(--club-accent),transparent_65%)] opacity-90"></div>
+      <a routerLink="/" class="w-fit font-semibold text-blue-200 transition hover:text-white">Back to Clubs</a>
+      <div>
+        <h1 class="m-0 text-[clamp(2rem,4vw,3rem)] leading-[1.05] font-bold">{{ currentClub.name }}</h1>
+        <p class="mt-2 text-[1.02rem] text-slate-300">{{ currentClub.tagline }}</p>
       </div>
-      <div class="header-actions">
+      <div class="mt-2">
         @if (isLoggedIn()) {
-          <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
+          <button
+            type="button"
+            class="cursor-pointer rounded-[10px] bg-red-600 px-4 py-2.5 font-bold text-white transition hover:-translate-y-0.5 hover:brightness-105"
+            (click)="logout()">
+            Logout
+          </button>
         } @else {
-          <a [routerLink]="['/club', currentClub.id, 'login']" class="btn btn-primary">Club Login</a>
+          <a
+            [routerLink]="['/club', currentClub.id, 'login']"
+            class="inline-block rounded-[10px] px-4 py-2.5 font-bold text-slate-50 transition hover:-translate-y-0.5 hover:brightness-105"
+            [style.background]="currentClub.color">
+            Club Login
+          </a>
         }
       </div>
     </header>
 
-    <section class="about" [style.border-color]="currentClub.color">
-      <h2>About</h2>
-      <p>{{ currentClub.description }}</p>
-      <div class="contacts">
+    <section
+      class="relative z-10 mx-auto mb-4 max-w-7xl overflow-hidden rounded-[18px] border bg-slate-900/80 p-[1.15rem] shadow-[0_18px_40px_rgba(2,6,23,0.32)] backdrop-blur-[12px]"
+      [style.border-color]="currentClub.color">
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,var(--club-accent),transparent_65%)] opacity-90"></div>
+      <h2 class="mt-0 text-2xl font-semibold">About</h2>
+      <p class="leading-7 text-slate-300">{{ currentClub.description }}</p>
+      <div class="mt-3 flex flex-wrap gap-x-6 gap-y-3 text-blue-100">
         <span><strong>Email:</strong> {{ currentClub.contacts.email }}</span>
         <span><strong>Phone:</strong> {{ currentClub.contacts.phone }}</span>
       </div>
     </section>
 
-    <section class="events" [style.border-color]="currentClub.color">
-      <div class="section-head">
-        <h2>Events</h2>
-        <p>Upcoming and managed events for {{ currentClub.name }}.</p>
+    <section
+      class="relative z-10 mx-auto mb-4 max-w-7xl overflow-hidden rounded-[18px] border bg-slate-900/80 p-[1.15rem] shadow-[0_18px_40px_rgba(2,6,23,0.32)] backdrop-blur-[12px]"
+      [style.border-color]="currentClub.color">
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,var(--club-accent),transparent_65%)] opacity-90"></div>
+      <div>
+        <h2 class="mt-0 text-2xl font-semibold">Event Collection</h2>
+        <p class="mt-1 text-slate-300">Sample highlights and moments from {{ currentClub.name }} activities.</p>
       </div>
 
-      <div class="event-list">
-        @for (event of events(); track trackByEvent($index, event)) {
-          <article class="event-card">
-            <h3>{{ event.title }}</h3>
-            <p><strong>Date:</strong> {{ event.date }}</p>
-            <p><strong>Venue:</strong> {{ event.venue }}</p>
-            <p>{{ event.description }}</p>
+      @if (eventGallery().length) {
+        <div class="relative mt-4 min-h-[24rem] overflow-hidden rounded-[20px] border border-slate-400/15 bg-slate-950/50 md:min-h-[24rem]">
+          <button
+            type="button"
+            class="absolute top-1/2 left-4 z-20 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-slate-900/70 text-slate-50 backdrop-blur-[10px] transition hover:brightness-110"
+            (click)="showPreviousGalleryImage()"
+            aria-label="Previous image">
+            &#10094;
+          </button>
+
+          <div class="relative min-h-[24rem] md:min-h-[24rem]" aria-live="polite">
+            @for (image of eventGallery(); track trackByGalleryImage($index, image); let i = $index) {
+              <figure
+                class="absolute inset-0 m-0 transition duration-500 ease-out"
+                [class.opacity-0]="i !== activeGalleryIndex()"
+                [class.scale-[1.03]]="i !== activeGalleryIndex()"
+                [class.pointer-events-none]="i !== activeGalleryIndex()"
+                [class.opacity-100]="i === activeGalleryIndex()"
+                [class.scale-100]="i === activeGalleryIndex()">
+                <img class="block h-[24rem] w-full object-cover saturate-105 md:h-[24rem]" [src]="image.src" [alt]="image.alt" />
+                <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,17,32,0.08),rgba(8,17,32,0.72)_78%),linear-gradient(90deg,color-mix(in_srgb,var(--club-accent)_30%,transparent),transparent_44%)]"></div>
+                <figcaption class="absolute right-5 bottom-5 left-5 z-10 max-w-[32rem] md:right-5 md:bottom-5 md:left-5">
+                  <span
+                    class="mb-2 inline-block rounded-full px-3 py-1 text-[0.78rem] font-bold uppercase tracking-[0.08em] text-slate-50"
+                    [style.background]="currentClub.color">
+                    {{ currentClub.shortName }} events
+                  </span>
+                  <p class="m-0 leading-7 text-slate-50">{{ image.caption }}</p>
+                </figcaption>
+              </figure>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="absolute top-1/2 right-4 z-20 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-slate-900/70 text-slate-50 backdrop-blur-[10px] transition hover:brightness-110"
+            (click)="showNextGalleryImage()"
+            aria-label="Next image">
+            &#10095;
+          </button>
+        </div>
+
+        <div class="mt-4 flex justify-center gap-2" aria-label="Carousel navigation">
+          @for (image of eventGallery(); track trackByGalleryImage($index, image); let i = $index) {
+            <button
+              type="button"
+              class="h-3 w-3 rounded-full transition"
+              [style.background-color]="i === activeGalleryIndex() ? currentClub.color : 'rgba(148, 163, 184, 0.38)'"
+              [class.scale-110]="i === activeGalleryIndex()"
+              [attr.aria-label]="'Show slide ' + (i + 1)"
+              (click)="setActiveGalleryIndex(i)"
+            ></button>
+          }
+        </div>
+      }
+    </section>
+
+    <section
+      class="relative z-10 mx-auto mb-4 max-w-7xl overflow-hidden rounded-[18px] border bg-slate-900/80 p-[1.15rem] shadow-[0_18px_40px_rgba(2,6,23,0.32)] backdrop-blur-[12px]"
+      [style.border-color]="currentClub.color">
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,var(--club-accent),transparent_65%)] opacity-90"></div>
+      <div>
+        <h2 class="mt-0 text-2xl font-semibold">Events</h2>
+        <p class="mt-1 text-slate-300">Upcoming and managed events for {{ currentClub.name }}.</p>
+      </div>
+
+      <div class="mt-4 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
+        @for (event of events(); track trackByEvent($index, event); let i = $index) {
+          <article
+            class="rounded-[14px] border border-slate-400/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent),rgba(15,23,42,0.88)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(2,6,23,0.28)]">
+            <h3 class="mt-0 text-xl font-semibold">{{ event.title }}</h3>
+            <p class="my-1"><strong>Date:</strong> {{ event.date }}</p>
+            <p class="my-1"><strong>Venue:</strong> {{ event.venue }}</p>
+            <p class="my-1 text-slate-300">{{ event.description }}</p>
             @if (isLoggedIn()) {
-              <button type="button" class="btn btn-secondary" (click)="editEvent(event)">Update Event</button>
+              <button
+                type="button"
+                class="mt-2 cursor-pointer rounded-[10px] bg-slate-700 px-4 py-2.5 font-bold text-slate-200 transition hover:-translate-y-0.5 hover:brightness-110"
+                (click)="editEvent(event)">
+                Update Event
+              </button>
             }
           </article>
         }
       </div>
     </section>
 
-    <section class="manager" [style.border-color]="currentClub.color">
-      <h2>Event Manager</h2>
-      @if (!isLoggedIn()) {
-        <p class="hint">Club admin login is required to add or update events.</p>
-      } @else {
-        <form class="event-form" (ngSubmit)="submitForm()">
-          <label>
-            Title
-            <input
-              type="text"
-              [ngModel]="form().title"
-              (ngModelChange)="setFormField('title', $event)"
-              name="title"
-              required
-            />
-          </label>
+    <section
+      class="relative z-10 mx-auto mb-4 max-w-7xl overflow-hidden rounded-[18px] border bg-slate-900/80 p-[1.15rem] shadow-[0_18px_40px_rgba(2,6,23,0.32)] backdrop-blur-[12px]"
+      [style.border-color]="currentClub.color">
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,var(--club-accent),transparent_65%)] opacity-90"></div>
+      <div>
+        <h2 class="mt-0 text-2xl font-semibold">Achievements & Performances</h2>
+        <p class="mt-1 text-slate-300">Highlights, recognitions and notable club performances.</p>
+      </div>
 
-          <label>
-            Date
-            <input
-              type="date"
-              [ngModel]="form().date"
-              (ngModelChange)="setFormField('date', $event)"
-              name="date"
-              required
-            />
-          </label>
-
-          <label>
-            Venue
-            <input
-              type="text"
-              [ngModel]="form().venue"
-              (ngModelChange)="setFormField('venue', $event)"
-              name="venue"
-              required
-            />
-          </label>
-
-          <label>
-            Description
-            <textarea
-              [ngModel]="form().description"
-              (ngModelChange)="setFormField('description', $event)"
-              name="description"
-              rows="3"
-              required
-            ></textarea>
-          </label>
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-              {{ editingEventId() ? 'Save Update' : 'Add Event' }}
-            </button>
-            @if (editingEventId()) {
-              <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+      <div class="mt-4 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
+        @for (achievement of achievements(); track trackByAchievement($index, achievement); let i = $index) {
+          <article
+            class="rounded-[14px] border border-slate-400/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent),rgba(15,23,42,0.88)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(2,6,23,0.28)]">
+            <p class="text-[0.92rem] font-bold" [style.color]="currentClub.color">{{ achievement.category }} &bull; {{ achievement.year }}</p>
+            <h3 class="mt-0 text-xl font-semibold">{{ achievement.title }}</h3>
+            <p class="text-slate-300">{{ achievement.description }}</p>
+            @if (isLoggedIn()) {
+              <button
+                type="button"
+                class="mt-2 cursor-pointer rounded-[10px] bg-slate-700 px-4 py-2.5 font-bold text-slate-200 transition hover:-translate-y-0.5 hover:brightness-110"
+                (click)="editAchievement(achievement)">
+                Update Entry
+              </button>
             }
+          </article>
+        }
+      </div>
+    </section>
+
+    <section
+      class="relative z-10 mx-auto mb-4 max-w-7xl overflow-hidden rounded-[18px] border bg-slate-900/80 p-[1.15rem] shadow-[0_18px_40px_rgba(2,6,23,0.32)] backdrop-blur-[12px]"
+      [style.border-color]="currentClub.color">
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,var(--club-accent),transparent_65%)] opacity-90"></div>
+      <h2 class="mt-0 text-2xl font-semibold">Club Content Manager</h2>
+      @if (!isLoggedIn()) {
+        <p class="mt-1 text-amber-400">Club admin login is required to add or update events, achievements and performances.</p>
+      } @else {
+        <div class="mt-4 flex flex-col gap-5">
+          <div class="w-full rounded-[14px] border border-slate-400/20 bg-slate-950/45 p-5">
+            <h3 class="mt-0 text-xl font-semibold">Manage Events</h3>
+            <form class="mt-4 flex flex-col gap-3" (ngSubmit)="submitForm()">
+              <label class="grid gap-1.5 font-semibold">
+                Title
+                <input
+                  type="text"
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="form().title"
+                  (ngModelChange)="setFormField('title', $event)"
+                  name="title"
+                  required
+                />
+              </label>
+
+              <label class="grid gap-1.5 font-semibold">
+                Date
+                <input
+                  type="date"
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="form().date"
+                  (ngModelChange)="setFormField('date', $event)"
+                  name="date"
+                  required
+                />
+              </label>
+
+              <label class="grid gap-1.5 font-semibold">
+                Venue
+                <input
+                  type="text"
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="form().venue"
+                  (ngModelChange)="setFormField('venue', $event)"
+                  name="venue"
+                  required
+                />
+              </label>
+
+              <label class="grid gap-1.5 font-semibold">
+                Description
+                <textarea
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="form().description"
+                  (ngModelChange)="setFormField('description', $event)"
+                  name="description"
+                  rows="3"
+                  required
+                ></textarea>
+              </label>
+
+              <div class="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="submit"
+                  class="cursor-pointer rounded-full px-4 py-2.5 font-bold text-slate-50 transition hover:-translate-y-0.5 hover:brightness-105"
+                  [style.background]="currentClub.color">
+                  {{ editingEventId() ? 'Save Update' : 'Add Event' }}
+                </button>
+                @if (editingEventId()) {
+                  <button
+                    type="button"
+                    class="cursor-pointer rounded-[10px] bg-slate-700 px-4 py-2.5 font-bold text-slate-200 transition hover:-translate-y-0.5 hover:brightness-110"
+                    (click)="cancelEdit()">
+                    Cancel
+                  </button>
+                }
+              </div>
+            </form>
           </div>
-        </form>
+
+          <div class="w-full rounded-[14px] border border-slate-400/20 bg-slate-950/45 p-5">
+            <h3 class="mt-0 text-xl font-semibold">Manage Achievements</h3>
+            <form class="mt-4 flex flex-col gap-3" (ngSubmit)="submitAchievementForm()">
+              <label class="grid gap-1.5 font-semibold">
+                Title
+                <input
+                  type="text"
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="achievementForm().title"
+                  (ngModelChange)="setAchievementFormField('title', $event)"
+                  name="achievementTitle"
+                  required
+                />
+              </label>
+
+              <label class="grid gap-1.5 font-semibold">
+                Year
+                <input
+                  type="text"
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="achievementForm().year"
+                  (ngModelChange)="setAchievementFormField('year', $event)"
+                  name="achievementYear"
+                  placeholder="2026"
+                  required
+                />
+              </label>
+
+              <label class="grid gap-1.5 font-semibold">
+                Type
+                <select
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="achievementForm().category"
+                  (ngModelChange)="setAchievementFormField('category', $event)"
+                  name="achievementCategory"
+                  required
+                >
+                  <option value="Achievement">Achievement</option>
+                  <option value="Performance">Performance</option>
+                </select>
+              </label>
+
+              <label class="grid gap-1.5 font-semibold">
+                Description
+                <textarea
+                  class="rounded-[10px] border border-slate-600 bg-slate-950 px-3 py-2.5 text-slate-50 outline-none transition focus:border-sky-400"
+                  [ngModel]="achievementForm().description"
+                  (ngModelChange)="setAchievementFormField('description', $event)"
+                  name="achievementDescription"
+                  rows="3"
+                  required
+                ></textarea>
+              </label>
+
+              <div class="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="submit"
+                  class="cursor-pointer rounded-full px-4 py-2.5 font-bold text-slate-50 transition hover:-translate-y-0.5 hover:brightness-105"
+                  [style.background]="currentClub.color">
+                  {{ editingAchievementId() ? 'Save Update' : 'Add Entry' }}
+                </button>
+                @if (editingAchievementId()) {
+                  <button
+                    type="button"
+                    class="cursor-pointer rounded-[10px] bg-slate-700 px-4 py-2.5 font-bold text-slate-200 transition hover:-translate-y-0.5 hover:brightness-110"
+                    (click)="cancelAchievementEdit()">
+                    Cancel
+                  </button>
+                }
+              </div>
+            </form>
+          </div>
+        </div>
       }
     </section>
   </div>
 } @else {
-  <div class="not-found">
-    <h2>Club not found</h2>
-    <a routerLink="/">Go back</a>
+  <div class="grid min-h-screen place-content-center bg-slate-950 text-center text-slate-200">
+    <h2 class="text-2xl font-semibold">Club not found</h2>
+    <a routerLink="/" class="text-blue-400">Go back</a>
   </div>
 }

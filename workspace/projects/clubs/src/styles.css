@@ -9,3 +9,79 @@ body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-orb {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-2rem, 1.5rem, 0) scale(1.08);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-write-on,
+.about-write-on-delayed {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  animation:
+    typewriter 2.2s steps(90, end) 180ms forwards,
+    fade-up 600ms ease 180ms forwards;
+}
+
+.about-write-on-delayed {
+  animation:
+    typewriter 2.5s steps(110, end) 1.9s forwards,
+    fade-up 600ms ease 1.9s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .about-write-on,
+  .about-write-on-delayed {
+    opacity: 1 !important;
+    clip-path: none !important;
+  }
+}

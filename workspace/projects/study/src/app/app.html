@@ -1,71 +1,168 @@
 <div class="study-shell">
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
   <header class="hero">
-    <p class="chip">SRKR Study Hub</p>
-    <h1>Study Planner and Resources</h1>
-    <p>Static academic dashboard covering subjects, tasks, schedules, and revision tracking.</p>
+    <div class="hero-copy">
+      <p class="chip">Interactive BTech Learning Portal</p>
+      <h1>{{ title }}</h1>
+      <p class="hero-text">
+        Students can learn inside this site through branch-based modules, mark lessons complete, and
+        grow their progress bar as they finish each course.
+      </p>
+
+      <div class="hero-tags" aria-label="Course features">
+        <span>In-site lessons</span>
+        <span>Module completion</span>
+        <span>Persistent progress</span>
+      </div>
+    </div>
+
+    <section class="hero-panel" aria-label="Platform overview">
+      @for (item of highlights; track item.label) {
+        <article>
+          <span>{{ item.label }}</span>
+          <strong>{{ item.value }}</strong>
+        </article>
+      }
+    </section>
   </header>
 
-  <section class="quick-stats" aria-label="Study quick stats">
-    <article>
-      <h2>Attendance Goal</h2>
-      <p>Target: 85%+</p>
+  <section class="intro-grid" aria-label="Orientation panels">
+    <article class="info-card">
+      <p class="eyebrow">Learning model</p>
+      <h2>One starter course for each branch</h2>
+      <p>
+        Every branch has three beginner modules with short lesson content derived from official
+        beginner course structures, rewritten for direct study inside the website.
+      </p>
     </article>
-    <article>
-      <h2>Assignments</h2>
-      <p>5 pending this week</p>
-    </article>
-    <article>
-      <h2>Upcoming Tests</h2>
-      <p>3 scheduled</p>
-    </article>
-    <article>
-      <h2>Revision Hours</h2>
-      <p>12 / 20 this week</p>
+
+    <article class="info-card tone-soft">
+      <p class="eyebrow">Completion logic</p>
+      <h2>Finish modules to increase progress</h2>
+      <p>
+        When a student clicks complete on a module, the course progress bar updates immediately and
+        stays saved in the browser.
+      </p>
     </article>
   </section>
 
-  <section class="subjects" aria-label="Subject cards">
-    <h2>Subjects</h2>
-    <div class="subject-grid">
-      <article>
-        <h3>Data Structures</h3>
-        <p>Stacks, queues, trees, graph traversal.</p>
+  <section class="course-grid" aria-label="Courses for BTech branches">
+    @for (course of starterTracks; track course.id) {
+      <article
+        class="course-card"
+        [class.course-card--active]="isActive(course.id)"
+        [style.--accent]="course.accent"
+      >
+        <button class="course-select" type="button" (click)="selectCourse(course.id)">
+          <div class="course-head">
+            <div class="branch-mark">{{ course.icon }}</div>
+            <div>
+              <p class="eyebrow">{{ course.branch }}</p>
+              <h3>{{ course.courseTitle }}</h3>
+              <p class="provider">{{ course.provider }}</p>
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <span>{{ course.level }}</span>
+            <span>{{ getCompletedCount(course) }}/{{ course.modules.length }} modules done</span>
+          </div>
+
+          <div class="progress-block" aria-label="Course progress">
+            <div class="progress-copy">
+              <span>Completion progress</span>
+              <strong>{{ getProgress(course) }}%</strong>
+            </div>
+            <div
+              class="progress-track"
+              role="progressbar"
+              [attr.aria-valuenow]="getProgress(course)"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div class="progress-fill" [style.width.%]="getProgress(course)"></div>
+            </div>
+          </div>
+        </button>
       </article>
-      <article>
-        <h3>DBMS</h3>
-        <p>Normalization, SQL joins, transactions.</p>
-      </article>
-      <article>
-        <h3>Operating Systems</h3>
-        <p>Scheduling, deadlocks, memory management.</p>
-      </article>
-      <article>
-        <h3>Computer Networks</h3>
-        <p>OSI model, routing, protocols and security.</p>
-      </article>
-    </div>
+    }
   </section>
 
-  <section class="planner" aria-label="Weekly plan">
-    <h2>Weekly Study Plan</h2>
-    <div class="plan-grid">
-      <article><h3>Monday</h3><p>DSA practice + DBMS notes</p></article>
-      <article><h3>Tuesday</h3><p>OS unit revision + lab prep</p></article>
-      <article><h3>Wednesday</h3><p>CN problem set + mock quiz</p></article>
-      <article><h3>Thursday</h3><p>Project work + interview prep</p></article>
-      <article><h3>Friday</h3><p>Backlog clearance + summaries</p></article>
-      <article><h3>Weekend</h3><p>Full revision and test simulation</p></article>
-    </div>
-  </section>
+  @if (getOpenedCourse(); as openedCourse) {
+    <div class="dialog-backdrop" (click)="closeCourseDialog()"></div>
 
-  <section class="resources" aria-label="Study resources">
-    <h2>Resource Sections</h2>
-    <ul>
-      <li>Notes Repository</li>
-      <li>Previous Question Papers</li>
-      <li>Lab Manuals</li>
-      <li>Placement Aptitude Sheets</li>
-      <li>Reference Video Playlists</li>
-    </ul>
-  </section>
+    <section
+      class="course-dialog"
+      [style.--accent]="openedCourse.accent"
+      aria-label="Course modules dialog"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">{{ openedCourse.branch }}</p>
+          <h2>{{ openedCourse.courseTitle }}</h2>
+          <p class="provider">{{ openedCourse.provider }}</p>
+        </div>
+
+        <button class="dialog-close" type="button" (click)="closeCourseDialog()" aria-label="Close dialog">
+          Close
+        </button>
+      </div>
+
+      <div class="dialog-progress">
+        <div class="progress-copy">
+          <span>Completion progress</span>
+          <strong>{{ getProgress(openedCourse) }}%</strong>
+        </div>
+        <div
+          class="progress-track"
+          role="progressbar"
+          [attr.aria-valuenow]="getProgress(openedCourse)"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="progress-fill" [style.width.%]="getProgress(openedCourse)"></div>
+        </div>
+      </div>
+
+      <div class="modules" aria-label="Course modules">
+        @for (module of openedCourse.modules; track module.title; let moduleIndex = $index) {
+          <section class="module-card" [class.module-card--complete]="isModuleComplete(openedCourse.id, moduleIndex)">
+            <div class="module-head">
+              <div>
+                <p class="module-kicker">{{ module.duration }}</p>
+                <h4>{{ module.title }}</h4>
+              </div>
+
+              <button class="complete-btn" type="button" (click)="toggleModule(openedCourse.id, moduleIndex)">
+                {{ isModuleComplete(openedCourse.id, moduleIndex) ? 'Completed' : 'Mark complete' }}
+              </button>
+            </div>
+
+            <p class="module-overview">{{ module.overview }}</p>
+
+            <div class="lesson-list">
+              @for (lesson of module.lessons; track lesson.title) {
+                <article class="lesson-card">
+                  <h5>{{ lesson.title }}</h5>
+                  <p>{{ lesson.description }}</p>
+                  <p class="lesson-example">Example: {{ lesson.example }}</p>
+                </article>
+              }
+            </div>
+          </section>
+        }
+      </div>
+
+      <div class="course-actions">
+        <p class="source-note">Structured from: {{ openedCourse.source }}</p>
+        <button class="reset-btn" type="button" (click)="resetCourse(openedCourse.id)">
+          Reset progress
+        </button>
+      </div>
+    </section>
+  }
 </div>

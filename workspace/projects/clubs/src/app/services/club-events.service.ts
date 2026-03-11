@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CLUB_MAP, ClubEvent } from '../data/clubs.data';
+import { CLUB_MAP, ClubAchievement, ClubEvent } from '../data/clubs.data';
 
 const EVENTS_KEY = 'clubs-events-store';
+const ACHIEVEMENTS_KEY = 'clubs-achievements-store';
 
 type EventsStore = Record<string, ClubEvent[]>;
+type AchievementsStore = Record<string, ClubAchievement[]>;
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,32 @@ export class ClubEventsService {
 
   private saveStore(store: EventsStore): void {
     localStorage.setItem(EVENTS_KEY, JSON.stringify(store));
+  }
+
+  private getAchievementsStore(): AchievementsStore {
+    const raw = localStorage.getItem(ACHIEVEMENTS_KEY);
+    if (raw) {
+      try {
+        return JSON.parse(raw) as AchievementsStore;
+      } catch {
+        return this.seedAchievementsStore();
+      }
+    }
+
+    return this.seedAchievementsStore();
+  }
+
+  private seedAchievementsStore(): AchievementsStore {
+    const seed = Object.fromEntries(
+      Object.entries(CLUB_MAP).map(([clubId, club]) => [clubId, [...club.achievements]])
+    ) as AchievementsStore;
+
+    localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(seed));
+    return seed;
+  }
+
+  private saveAchievementsStore(store: AchievementsStore): void {
+    localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(store));
   }
 
   getEvents(clubId: string): ClubEvent[] {
@@ -66,5 +94,38 @@ export class ClubEventsService {
     );
 
     this.saveStore(store);
+  }
+
+  getAchievements(clubId: string): ClubAchievement[] {
+    const store = this.getAchievementsStore();
+    return store[clubId] ?? [];
+  }
+
+  addAchievement(clubId: string, payload: Omit<ClubAchievement, 'id'>): void {
+    const store = this.getAchievementsStore();
+    const next: ClubAchievement = {
+      id: crypto.randomUUID(),
+      ...payload
+    };
+
+    const achievements = store[clubId] ?? [];
+    store[clubId] = [next, ...achievements];
+    this.saveAchievementsStore(store);
+  }
+
+  updateAchievement(clubId: string, achievementId: string, payload: Omit<ClubAchievement, 'id'>): void {
+    const store = this.getAchievementsStore();
+    const achievements = store[clubId] ?? [];
+
+    store[clubId] = achievements.map((achievement) =>
+      achievement.id === achievementId
+        ? {
+            id: achievement.id,
+            ...payload
+          }
+        : achievement
+    );
+
+    this.saveAchievementsStore(store);
   }
 }
